@@ -125,7 +125,10 @@ export default {
       })
     },
     clearCache() {
-
+      this.msg = '处理中...'
+      chrome.browsingData.removeCache({ since: 0 }, () => {
+        this.msg = '清除成功'
+      })
     },
   },
 }
