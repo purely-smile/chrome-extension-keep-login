@@ -15,6 +15,7 @@ import alert from 'src/libs/Alert'
 import { getLocalUrl } from 'src/libs/get-local-url'
 import { copyToClipboard } from 'src/libs/copy-to-clipboard'
 import { getLoaclIp } from 'src/libs/get-local-ip'
+import { login } from 'src/libs/login'
 import group from './group'
 
 export default {
@@ -28,8 +29,12 @@ export default {
           fn: 'openConfig',
         },
         {
-          name: '刷新',
+          name: '登录',
           fn: 'login',
+        },
+        {
+          name: '强制刷新',
+          fn: 'forceRefresh',
         },
         {
           name: '复制url',
@@ -65,10 +70,12 @@ export default {
     handleBtnClick({ fn }) {
       this[fn]()
     },
-    login() {
-      this.postMessage({
-        action: 'login',
-      })
+    async login() {
+      try {
+        this.msg = await login()
+      } catch (error) {
+        this.msg = error.message
+      }
     },
     postMessage(info) {
       this.bus.postMessage(info)
@@ -128,6 +135,16 @@ export default {
       this.msg = '处理中...'
       chrome.browsingData.removeCache({ since: 0 }, () => {
         this.msg = '清除成功'
+      })
+    },
+    forceRefresh() {
+      chrome.tabs.query({ active: true }, (tabs) => {
+        const { id } = tabs[0]
+        chrome.tabs.reload(id, {
+          bypassCache: true,
+        }, () => {
+          this.msg = '刷新成功'
+        })
       })
     },
   },
