@@ -1,9 +1,12 @@
 <template>
   <div class="app-wrap">
     <alert :msg="msg"/>
-    <group title="操作">
+    <group
+      v-for="item in btnList"
+      :key="item.name"
+      :title="item.name">
       <button
-        v-for="val in btnList"
+        v-for="val in item.list"
         @click="handleBtnClick(val)"
         :key="val.name">{{ val.name }}</button>
     </group>
@@ -16,6 +19,7 @@ import { getLocalUrl } from 'src/libs/get-local-url'
 import { copyToClipboard } from 'src/libs/copy-to-clipboard'
 import { getLoaclIp } from 'src/libs/get-local-ip'
 import { login } from 'src/libs/login'
+import { btnList } from './config'
 import group from './group'
 
 export default {
@@ -23,40 +27,7 @@ export default {
   data() {
     return {
       msg: '',
-      btnList: [
-        {
-          name: '设置',
-          fn: 'openConfig',
-        },
-        {
-          name: '登录',
-          fn: 'login',
-        },
-        {
-          name: '强制刷新',
-          fn: 'forceRefresh',
-        },
-        {
-          name: '复制url',
-          fn: 'copyUrl',
-        },
-        {
-          name: '访问开发地址',
-          fn: 'openLocalUrl',
-        },
-        {
-          name: '访问仿真地址',
-          fn: 'openOnlineUrl',
-        },
-        {
-          name: '4s 调试',
-          fn: 'fireDebug',
-        },
-        {
-          name: '清空缓存',
-          fn: 'clearCache',
-        },
-      ],
+      btnList,
     }
   },
   components: {
@@ -146,6 +117,31 @@ export default {
           this.msg = '刷新成功'
         })
       })
+    },
+    async createTemplate() {
+      const date = new Date()
+      const title = `测试用模板：${date.getFullYear()}-${date.getHours()}-${date.getMinutes()}`
+      const { data, success, message } = await fetch('https://bookfz.aibeike.com/template/addTemplate', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          cityIds: '0512',
+          years: '2019',
+          semesters: '1',
+          gradeIds: '0',
+          subjectIds: '1',
+          typeIds: '1',
+          title,
+        }),
+      }).then(val => val.json())
+      if (!success) {
+        this.msg = message
+      } else {
+        const url = `https://bookfz.aibeike.com/layout/#/edit/${data}/0`
+        window.open(url)
+      }
     },
   },
 }
