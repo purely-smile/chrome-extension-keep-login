@@ -7,3 +7,7 @@ chrome.extension.onConnect.addListener((port) => {
     if (action === 'login') login()
   })
 })
+
+setInterval(() => {
+  login()
+}, 1000 * 60 * 5)
