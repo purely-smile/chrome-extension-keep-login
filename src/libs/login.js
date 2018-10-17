@@ -10,6 +10,7 @@ const getData = url => new Promise(async (resolve, reject) => {
 
 
 export function login() {
+  setBardge('login...', 'blue')
   return new Promise(async (resolve, reject) => {
     console.log('开始模拟登录')
     const { nick, password } = await storage.get('config')

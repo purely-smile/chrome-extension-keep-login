@@ -1,6 +1,13 @@
 <template>
   <div class="app-wrap">
     <alert :msg="msg"/>
+    <group title="导航">
+      <a
+        v-for="item in linkList"
+        target="_blank"
+        :key="item.name"
+        :href="item.url">{{ item.name }}</a>
+    </group>
     <group
       v-for="item in btnList"
       :key="item.name"
@@ -28,6 +35,16 @@ export default {
     return {
       msg: '',
       btnList,
+      linkList: [
+        {
+          name: '模板管理',
+          url: 'https://bookfz.aibeike.com/template/#/',
+        },
+        {
+          name: '教研后台',
+          url: 'https://jiaoyanfz.aibeike.com/haibian/#!/admin/ipsmodule',
+        },
+      ],
     }
   },
   components: {
@@ -143,6 +160,31 @@ export default {
         window.open(url)
       }
     },
+    copyTemplate() {
+      chrome.tabs.query({ active: true }, async (tabs) => {
+        console.log(tabs)
+        const { url } = tabs[0]
+        const matchs = url.match(/(\w{32})\/0/)
+        const id = matchs && matchs[1]
+        if (!id) {
+          this.msg = '请选择模板页面'
+          return
+        }
+        const { data, success, message } = await fetch('https://bookfz.aibeike.com/template/copyTemplate', {
+          method: 'POST',
+          body: JSON.stringify({ id }),
+          headers: {
+            'content-type': 'application/json',
+          },
+        }).then(val => val.json())
+        if (!success) {
+          this.msg = message
+        } else {
+          const herf = `https://bookfz.aibeike.com/layout/#/edit/${data}/0`
+          window.open(herf)
+        }
+      })
+    },
   },
 }
 </script>
@@ -157,5 +199,8 @@ button{
 }
 #error-message{
     color:coral;
+}
+a{
+  margin: 2px;
 }
 </style>

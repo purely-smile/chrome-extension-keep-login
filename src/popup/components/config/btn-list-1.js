@@ -19,4 +19,8 @@ export const btnList1 = [
     name: '新建模板（仿真环境）',
     fn: 'createTemplate',
   },
+  {
+    name: '复制模板（仿真环境）',
+    fn: 'copyTemplate',
+  },
 ]
