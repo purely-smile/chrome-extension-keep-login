@@ -8,6 +8,13 @@ const getData = url => new Promise(async (resolve, reject) => {
   fn(message)
 })
 
+const http = {
+  get(url) {
+    fetch(url, {
+      redirect: 'follow',
+    })
+  },
+}
 
 export function login() {
   setBardge('login...', 'blue')
@@ -25,9 +32,11 @@ export function login() {
         `https://ziyuankufz.aibeike.com/login/login.action?${userInfo}`,
         `https://jyptfz.aibeike.com//login/login.action?${userInfo}&code=`,
       ].map(url => getData(url)))
-      await fetch('https://jyptfz.aibeike.com/home/goSysModule.action?moduleId=203&systemId=203', {
-        redirect: 'follow',
-      })
+      await http.get('https://jyptfz.aibeike.com/#/home')
+      await http.get('https://ziyuankufz.aibeike.com/#/HomePage')
+      await http.get('https://jyptfz.aibeike.com/home/goSysModule.action?moduleId=203&systemId=203')
+      await http.get('https://jyptfz.aibeike.com/home/goSysModule.action?moduleId=21&systemId=3')
+
       console.log('登录成功')
       resolve('登录成功')
       setBardge('ok', 'cornflowerblue')
