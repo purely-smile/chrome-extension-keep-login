@@ -14,6 +14,15 @@ const http = {
       redirect: 'follow',
     })
   },
+  post(url, data) {
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+  },
 }
 
 export function login() {
@@ -25,13 +34,14 @@ export function login() {
       console.log('没有账号密码')
       return
     }
-    console.log(nick, password)
     const userInfo = (`email=${encodeURIComponent(nick)}&password=${encodeURIComponent(password)}`)
     try {
-      await Promise.all([
-        `https://ziyuankufz.aibeike.com/login/login.action?${userInfo}`,
-        `https://jyptfz.aibeike.com//login/login.action?${userInfo}&code=`,
-      ].map(url => getData(url)))
+      await getData(`https://ziyuankufz.aibeike.com/login/login.action?${userInfo}`)
+      await http.post('https://jyptfz.aibeike.com/login/login.action', {
+        code: '',
+        email: nick,
+        password: btoa(password),
+      })
       await http.get('https://jyptfz.aibeike.com/#/home')
       await http.get('https://ziyuankufz.aibeike.com/#/HomePage')
       await http.get('https://jyptfz.aibeike.com/home/goSysModule.action?moduleId=203&systemId=203')
