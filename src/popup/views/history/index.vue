@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import getCurrentTab from 'src/libs/get-current-tab'
 import Alert from 'src/libs/Alert'
 import formatData from './format-data'
+import { getStoreData } from '../../utils/get-store-data'
 
 export default {
   name: 'History',
@@ -33,13 +33,11 @@ export default {
     Alert,
   },
   async mounted() {
-    const { id } = await getCurrentTab()
-    const bkg = chrome.extension.getBackgroundPage()
-    const data = bkg.VUEX_DATA[id]
+    const data = await getStoreData()
     if (!data) {
       this.msg = '当前页面未记录数据'
     } else {
-      this.list = formatData(data)
+      this.list = formatData(data.history)
     }
   },
 }
@@ -47,7 +45,7 @@ export default {
 <style lang="scss" scoped>
 .history-wrap{
   min-height: 400px;
-  width: 500px;
+  width: 100%;
 }
 table{
   width: 100%;

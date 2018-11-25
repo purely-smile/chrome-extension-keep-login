@@ -2,7 +2,9 @@
   <div class="App-wrap">
     <div class="config-wrap">
       <h3 class="config-title">配置中心</h3>
-      <alert :msg="msg"/>
+      <a-alert
+        v-if="msg"
+        :message="msg"/>
       <input
         v-model="nick"
         type="text"
@@ -11,21 +13,16 @@
         v-model="password"
         type="text"
         placeholder="密码">
-      <input
-        type="number"
-        min="1"
-        max="20"
-        v-model="time"
-        placeholder="更新频率（分）">
-      <button @click="save">保存</button>
+      <a-button
+        type="primary"
+        @click="save">保存</a-button>
     </div>
   </div>
 </template>
 
 <script>
-import alert from '../../libs/Alert'
+import { storage } from 'src/libs/storage'
 
-const saveData = data => chrome.storage.sync.set(data)
 export default {
   name: 'App',
   data() {
@@ -36,13 +33,9 @@ export default {
       time: '2',
     }
   },
-  components: { alert },
-  mounted() {
-    const that = this
-    chrome.storage.sync.get('config', (val) => {
-      if (typeof val.config !== 'object') return
-      Object.assign(that, val.config)
-    })
+  async mounted() {
+    const data = await storage.get()
+    Object.assign(this, data)
   },
   methods: {
     save() {
@@ -60,7 +53,7 @@ export default {
         password,
         time,
       }
-      saveData({ config })
+      storage.set(config)
       this.msg = '保存成功'
     },
   },
@@ -91,18 +84,5 @@ input {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     padding: 5px;
-}
-button{
-    margin-top: 20px;
-    width: 100px;
-    text-align: center;
-    padding: 5px;
-    color: #fff;
-    background: #44acb6;
-    border: none;
-    border-radius: 3px;
-  &:hover{
-    background: #54c8cb;
-  }
 }
 </style>

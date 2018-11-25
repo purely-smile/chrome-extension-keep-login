@@ -3,6 +3,7 @@ const listen = () => {
   window.__KEEP_LOGIN___ = {
     emit(val) {
       console.log(val)
+      if (!chrome.runtime) return
       const port = chrome.runtime.connect('jonnbocgonjbdefphknlnhogckmnajof')
       port.postMessage(val)
       // chrome.runtime.sendMessage('keep-login', val)

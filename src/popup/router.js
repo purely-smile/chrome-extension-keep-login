@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import userArea from './views/user-area'
-import history from './views/history'
+import { userArea, history, paperData } from './views'
 
 Vue.use(VueRouter)
 
@@ -19,6 +18,11 @@ const routes = [
     path: '/history',
     name: 'history',
     component: history,
+  },
+  {
+    path: '/paper-data',
+    name: 'paper-data',
+    component: paperData,
   },
 ]
 

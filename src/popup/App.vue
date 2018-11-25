@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import navList from './nav-list'
+import navList from './components/nav-list'
 
 export default {
   components: {
@@ -20,5 +20,6 @@ export default {
 <style lang="scss" scoped>
 .container{
   padding: 5px;
+  width: 500px;
 }
 </style>

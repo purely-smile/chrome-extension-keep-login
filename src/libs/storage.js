@@ -1,10 +1,16 @@
 export const storage = {
-  get(name) {
-    return new Promise((resolve) => {
-      chrome.storage.sync.get(name, (val) => {
-        resolve(val[name])
+  get() {
+    return new Promise((resolve, reject) => {
+      chrome.storage.sync.get('config', (val) => {
+        if (typeof val.config !== 'object') {
+          reject(new Error('未获取配置信息'))
+          return
+        }
+        resolve(val.config)
       })
     })
   },
-  set() {},
+  set(data) {
+    chrome.storage.sync.set({ config: data })
+  },
 }

@@ -1,14 +1,22 @@
 <template>
-  <div class="nav-list-wrap">
-    <span
-      class="nav-item"
-      :class="{active:$route.name === item.value}"
-      v-for="item in navs"
+  <a-tabs
+    class="nav-list-wrap"
+    default-active-key="user-area"
+    @change="handleClick">
+    <a-tab-pane
       :key="item.value"
-      @click="handleClick(item)">
-      {{ item.name }}
-    </span>
-  </div>
+      :tab="item.name"
+      v-for="item in navs"/>
+    <div
+      slot="tabBarExtraContent"
+      title="设置中心"
+      class="config-icon"
+      @click="openConfig">
+      <a-icon
+        size="28"
+        type="setting" />
+    </div>
+  </a-tabs>
 </template>
 
 <script>
@@ -25,13 +33,21 @@ export default {
           name: '历史',
           value: 'history',
         },
+        {
+          name: 'paper数据',
+          value: 'paper-data',
+        },
       ],
     }
   },
   methods: {
-    handleClick(item) {
-      const { value } = item
+    handleClick(value) {
       this.$router.push({ name: value })
+    },
+    openConfig() {
+      if (chrome.runtime.openOptionsPage) {
+        chrome.runtime.openOptionsPage()
+      }
     },
   },
 }
@@ -39,17 +55,13 @@ export default {
 <style lang="scss" scoped>
 .nav-list-wrap{
   width: 100%;
-  height: 20px;
-  background: cornflowerblue;
-  color:#fff;
-  font-weight: bold;
-  .nav-item{
-    height: 100%;
-    display: inline-block;
-    text-align: center;
-    width: 50%;
-    &.active{
-      background: rgb(28, 98, 228);
+}
+.config-icon{
+  margin-right: 20px;
+  font-size: 20px;
+  &:hover{
+    i{
+      color: #1890ff;
     }
   }
 }

@@ -12,10 +12,21 @@
       v-for="item in btnList"
       :key="item.name"
       :title="item.name">
-      <button
+      <a-button
         v-for="val in item.list"
+        class="nav-item"
+        size="small"
+        type="primary"
+        ghost
         @click="handleBtnClick(val)"
-        :key="val.name">{{ val.name }}</button>
+        :key="val.name">{{ val.name }}</a-button>
+    </group>
+    <group title="控制面板">
+      <a-button
+        @click="handlePaperStateChange"
+        size="small">
+        {{ configData.importPaperState ? '关闭': '开启' }}paper无限导入
+      </a-button>
     </group>
   </div>
 </template>
@@ -26,6 +37,7 @@ import { getLocalUrl } from 'src/libs/get-local-url'
 import { copyToClipboard } from 'src/libs/copy-to-clipboard'
 import { getLoaclIp } from 'src/libs/get-local-ip'
 import { login } from 'src/libs/login'
+import { storage } from 'src/libs/storage'
 import { btnList } from './config'
 import group from '../../components/group'
 
@@ -45,14 +57,17 @@ export default {
           url: 'https://jiaoyanfz.aibeike.com/haibian/#!/admin/ipsmodule',
         },
       ],
+      configData: {},
     }
   },
   components: {
     group,
     alert,
   },
-  mounted() {
+  async mounted() {
     this.bus = chrome.extension.connect({ name: 'keep-login' })
+    this.configData = await storage.get()
+    console.log(this.configData)
   },
   methods: {
     handleBtnClick({ fn }) {
@@ -67,11 +82,6 @@ export default {
     },
     postMessage(info) {
       this.bus.postMessage(info)
-    },
-    openConfig() {
-      if (chrome.runtime.openOptionsPage) {
-        chrome.runtime.openOptionsPage()
-      }
     },
     async copyUrl() {
       let msg = '复制成功'
@@ -185,23 +195,28 @@ export default {
         }
       })
     },
+    // 切换paper导入无限状态
+    handlePaperStateChange() {
+      const { configData } = this
+      this.$set(configData, 'importPaperState', !configData.importPaperState)
+      storage.set(configData)
+    },
   },
 }
 </script>
 <style lang="scss" scoped>
 .app-wrap{
-  width: 300px;
+  width: 100%;
   height: 400px;
-}
-button{
-    margin: 2px;
-    padding: 2px;
-    cursor: pointer;
 }
 #error-message{
     color:coral;
 }
 a{
   margin: 2px;
+}
+.nav-item{
+  margin-right: 5px;
+  margin-bottom: 5px;
 }
 </style>
