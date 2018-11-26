@@ -45,8 +45,7 @@ export function login() {
       await http.get('https://jyptfz.aibeike.com/#/home')
       await http.get('https://ziyuankufz.aibeike.com/#/HomePage')
       await http.get('https://jyptfz.aibeike.com/home/goSysModule.action?moduleId=203&systemId=203')
-      await http.get('https://jyptfz.aibeike.com/home/goSysModule.action?moduleId=21&systemId=3')
-
+      await http.get('https://jyptfz.aibeike.com/#/publicCloud/module')
       console.log('登录成功')
       resolve('登录成功')
       setBardge('ok', 'cornflowerblue')

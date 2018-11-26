@@ -28,4 +28,7 @@ export const btnList1 = [
   {
     name: '复制book，未导入paper状态（未完善）',
   },
+  {
+    name: '保留第一页，删除所有页数据',
+  },
 ]

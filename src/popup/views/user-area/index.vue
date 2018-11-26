@@ -54,7 +54,7 @@ export default {
         },
         {
           name: '教研后台',
-          url: 'https://jiaoyanfz.aibeike.com/haibian/#!/admin/ipsmodule',
+          url: 'https://jyptfz.aibeike.com/#/publicCloud/module',
         },
       ],
       configData: {},
